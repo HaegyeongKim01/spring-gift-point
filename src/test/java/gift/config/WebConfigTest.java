@@ -19,7 +19,7 @@ class AcceptanceTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String ALLOWED_METHOD_NAMES = "GET,POST,HEAD,PUT,DELETE";
+    private static final String ALLOWED_METHOD_NAMES = "GET,POST,HEAD,PUT,DELETE,OPTIONS";
 
     @Test
     void cors() throws Exception {
@@ -30,6 +30,20 @@ class AcceptanceTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:8080"))
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
+                .andDo(print())
+        ;
+    }
+
+    @Test
+    void corsForLocalhost3000() throws Exception {
+        mockMvc.perform(
+                        options("/api/products")
+                                .header(HttpHeaders.ORIGIN, "http://localhost:3000")
+                                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "GET")
+                )
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:3000"))
                 .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHOD_NAMES))
                 .andDo(print())
         ;
