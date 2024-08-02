@@ -50,6 +50,7 @@ public class OrderController {
 
         Token token = jwtUtil.getBearerTokenFromAuthorizationHeader(authorizationHeader);
 
+        // 카카오 로그인 사용자만 카카오 메시지 보내기 기능 수행
         if (jwtUtil.isNotJwtToken(token)) {
             Option option = orderService.getOptionByOptionId(savedOrder.getOptionId());
             Product product = option.getProduct();
